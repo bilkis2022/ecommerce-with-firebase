@@ -24,6 +24,11 @@ const Product_details = () => {
         }
         return () => get_product()
     }, [])
+
+    const add_cart = () => {
+      localStorage.setItem('cart', {idd: product.id,
+      qty: quantity})
+    }
     
   return (
     <div>
@@ -51,10 +56,16 @@ const Product_details = () => {
                               stock: {product.stock}
                             </Card.Text>
                             
-
-                            <Button variant="primary" onClick={()=>set_quantity(quantity - 1)}>-</Button>
+                            {
+                              quantity <= 1 ? '' : <Button variant="primary" onClick={()=>set_quantity(quantity - 1)}>-</Button> 
+                            }
+                            
                             {quantity}
                             <Button variant="primary" onClick={()=>set_quantity(quantity + 1)}>+</Button>
+
+                            <Card.Text onClick={()=> add_cart()}>
+                              Add to Cart
+                            </Card.Text>
                         </Card.Body>
                     </Card>
                 
