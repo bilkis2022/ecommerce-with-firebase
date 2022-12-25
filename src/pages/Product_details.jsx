@@ -26,8 +26,8 @@ const Product_details = () => {
     }, [])
 
     const add_cart = () => {
-      localStorage.setItem('cart', {idd: product.id,
-      qty: quantity})
+      localStorage.setItem('cart',JSON.stringify({idd: product.id,
+      qty: quantity}) )
     }
     
   return (
