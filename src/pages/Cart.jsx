@@ -4,9 +4,9 @@ const Cart = () => {
     const [product, set_product] = useState([])
 
     useEffect(() => {
-    const get_p =  localStorage.getItem('cart')
+    const get_p = JSON.parse(localStorage.getItem('cart'))  
     console.log(get_p);
-    set_product(...product, get_p)
+    set_product([...product, get_p])
 
     console.log(product);
     }, [])
