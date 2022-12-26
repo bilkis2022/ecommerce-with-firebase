@@ -28,6 +28,12 @@ const Cart = () => {
     const get_p = JSON.parse(localStorage.getItem("cart"));
     console.log(get_p);
     set_product([...get_p]);
+
+    const prev_cart = product.map(item=>item)
+    console.log('prev', prev_cart);
+    const new_arr = inventory.find((items)=>{
+      console.log('rslt', items.id === prev_cart.id)
+    })
   }, []);
 
   console.log("gg", product);
