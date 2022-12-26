@@ -32,7 +32,7 @@ const Product_details = () => {
         if (p.id === product.id) {
           return {
             id: p.id,
-            qty: p.qty + 1,
+            qty: p.qty + quantity,
           };
         } else {
           return p;
