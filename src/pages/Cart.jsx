@@ -3,76 +3,94 @@ import React, { useEffect, useState } from "react";
 import { Button, Card } from "react-bootstrap";
 
 const Cart = () => {
-  const [inventory, set_inventory] = useState([])
+  const [inventory, set_inventory] = useState([]);
   const [product, set_product] = useState([]);
+  // const [data, setData]=useState([])
+
+  const data = [];
+  let get_p = JSON.parse(localStorage.getItem("cart"));
+  // console.log(get_p);
 
   useEffect(() => {
-    const get_all_products = async () => {
-        try {
-            const res = await axios.get('https://dummyjson.com/products');
-            const data =  res.data
-            set_inventory(data.products.slice(0, 6))
-            console.log('get', res.data);
-            console.log(data);
-        } 
-        catch (e) {
-            console.log(e);
-        }
+
+    const fetchData = async () => {
+      try {
+        const res = await axios.get("https://dummyjson.com/products");
+        const data = res.data;
+        // console.log(data)
+        set_inventory(data.products);
         
-    }
-    return () => get_all_products()
-  
-}, [])
+      } catch (e) {
+        console.log(e);
+      }
+    };
+    return ()=> fetchData();
 
-  useEffect(() => {
-    const get_p = JSON.parse(localStorage.getItem("cart"));
-    console.log(get_p);
-    set_product([...get_p]);
-
-    const prev_cart = product.map(item=>item)
-    console.log('prev', prev_cart);
-    const new_arr = inventory.find((items)=>{
-      console.log('rslt', items.id === prev_cart.id)
-    })
+    
   }, []);
+  
+for (let i = 0; i < get_p.length; i++) {
+      let find = inventory.find((element) => get_p[i].id === element.id);
+      if(find !== undefined){
+        find.quantity = get_p[i]?.qty;
+        data.push(find);
+      }
+      
+    }
 
-  console.log("gg", product);
+    const delete_item = (id)=>{
+      console.log('dlt');
+      let gg = JSON.parse(localStorage.getItem('cart'))
+      gg = gg.filter(item=>{
+       return item.id !== id;
+      })
+
+      localStorage.setItem('cart', JSON.stringify(gg))
+    }
+
+  console.log(data);
 
   return (
     <div>
       <div>
-        {/* {
-          product.map((items, index)=>(
-
-          ))
-        } */}
-        {/* <Card style={{ width: "18rem" }}>
+        {data?.map((items, index) => (
+          <div key={index}>
+            <Card style={{ width: "18rem" }}>
           <Card.Img
             variant="top"
-            src={items.thumbnail}
-            onClick={() => navigate(`/product-details/${items.id}`)}
+            src={items?.thumbnail}
+            
           />
           <Card.Body>
-            <Card.Title
-              onClick={() => navigate(`/product-details/${items.id}`)}
-            >
-              {" "}
-              {items.title}
+            <Card.Title>
+            
+              {items?.title}
             </Card.Title>
-            <Card.Title>Brand: {items.brand}</Card.Title>
+            <Card.Title>Brand: </Card.Title>
 
-            <Card.Text>Price: {items.price}</Card.Text>
-            <Card.Text>Discount: {items.discountPercentage}</Card.Text>
-            <Card.Text>Rating: {items.rating}</Card.Text>
+            <Card.Text>Price:{Math.ceil((items.price - items.discountPercentage)* items.quantity) } </Card.Text>
+            
 
             <Button
-              variant="primary"
-              onClick={() => navigate(`/product-details/${items.id}`)}
-            >
-              view details
+              variant="primary">
+            
+              -
             </Button>
+            {
+              items.quantity
+            }
+            <Button
+              variant="primary">
+            
+              +
+            </Button>
+
+            <Card.Text onClick={()=>delete_item()}>Delete it</Card.Text>
           </Card.Body>
-        </Card> */}
+        </Card>
+          </div>
+        ))}
+        
       </div>
     </div>
   );
